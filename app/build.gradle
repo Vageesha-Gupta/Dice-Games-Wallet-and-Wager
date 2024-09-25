@@ -45,6 +45,7 @@ dependencies {
     debugImplementation 'androidx.fragment:fragment-testing:1.8.3'
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     testImplementation "org.mockito:mockito-core:4.8.1"
     implementation 'androidx.test.espresso:espresso-accessibility:3.6.1'

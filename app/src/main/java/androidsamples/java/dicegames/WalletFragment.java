@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A {@link Fragment} that implements the Wallet screen.
@@ -22,6 +23,7 @@ public class WalletFragment extends Fragment {
 
     private static final String TAG = "WalletFragment";
     private GamesViewModel vm;
+    private TextView bal;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,6 +36,10 @@ public class WalletFragment extends Fragment {
         vm = new ViewModelProvider(requireActivity()).get(GamesViewModel.class);
         Log.d(TAG, "VM: " + vm);
 
+        bal = view.findViewById(R.id.txt_balance);
+
+        updateBalanceDisplay();
+
         view.findViewById(R.id.btn_die).setOnClickListener(v -> {
             Log.d(TAG, "Rolled");
         });
@@ -43,6 +49,9 @@ public class WalletFragment extends Fragment {
             NavDirections a = WalletFragmentDirections.actionWalletFragmentToGamesFragment();
             Navigation.findNavController(view).navigate(a);
         });
+    }
+    private void updateBalanceDisplay() {
+        bal.setText(String.valueOf(vm.getWalletBalance()));  // Set the balance from ViewModel
     }
 
 }
