@@ -76,4 +76,5 @@ public class GamePlayTest {
         IllegalStateException thrown = assertThrows(IllegalStateException.class, m::play);
         assertThat(thrown.getMessage(), is("Game Type not set, can't play!"));
     }
+
 }

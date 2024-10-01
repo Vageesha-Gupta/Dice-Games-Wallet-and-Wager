@@ -54,6 +54,29 @@ public class GamesViewModelWalletTest {
         assertThat(m.balance, is(oldBalance));
     }
 
+    //more tests
+    @Test
+    public void rolling3DoesNotChangeBalance() {
+        int oldBalance = m.balance;
+        when(walletDie.value()).thenReturn(3);  // Non-winning number (3)
+
+        m.rollWalletDie();
+        assertThat(m.balance, is(oldBalance));  // Balance should not change
+    }
+
+    @Test
+    public void twoConsecutiveWinsIncrementBalanceBy10() {
+        int oldBalance = m.balance;
+        when(walletDie.value()).thenReturn(WIN_VALUE);  // Winning number (6)
+
+        // Roll twice with a winning value
+        m.rollWalletDie();
+        m.rollWalletDie();
+
+        // Each roll increases balance by 5, so after 2 rolls, balance should increase by 10
+        assertThat(m.balance, is(oldBalance + 2 * INCR_VALUE));
+    }
+
     @Test
     public void testCanPlaceWager() {
         m.setBalance(100);
