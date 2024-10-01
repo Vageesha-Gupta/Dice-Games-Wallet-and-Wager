@@ -1,31 +1,31 @@
 package androidsamples.java.dicegames;
 
 import android.util.Log;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 /**
  * A {@link ViewModel} shared between {@link androidx.fragment.app.Fragment}s.
  */
 public class GamesViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
     private static final int INCR_VALUE = 5;
     private static final int WIN_VALUE = 6;
-    public int balance=0;
-
+    public int balance = 0;
 
     private Die[] dice; // Array to hold dice objects
     private int numberOfDice;
+    private int wager;  // Wager for the game
+    private GameType gameType;  // Type of the game being played
 
     Die die;
-//    // toast
-//    private MutableLiveData<Boolean> sixRolledLiveData = new MutableLiveData<>();
-    //test end
+
     public GamesViewModel() {
         balance = 0;
         die = new Die6();
+        numberOfDice = 4;  // Initialize with 4 dice
+        dice = new Die[numberOfDice];
+        for (int i = 0; i < numberOfDice; i++) {
+            dice[i] = new Die6();  // Assuming Die6 class represents a 6-sided die
+        }
     }
 
     public int getBalance() {
@@ -35,10 +35,6 @@ public class GamesViewModel extends ViewModel {
     public int dieValue() {
         return die.value();
     }
-
-//    public LiveData<Boolean> getSixRolledLiveData() {
-//        return sixRolledLiveData;
-//    }
 
     public void rollWalletDie() {
         die.roll();
@@ -51,7 +47,6 @@ public class GamesViewModel extends ViewModel {
     public void setBalance(int balance) {
         this.balance = balance;
     }
-
 
     public void setWager(int wager) {
         this.wager = wager;
@@ -74,9 +69,9 @@ public class GamesViewModel extends ViewModel {
             case TWO_ALIKE:
                 return wager > 0 && wager <= balance;
             case THREE_ALIKE:
-                return wager > 0 && wager <= balance + 20; // Example condition
+                return wager > 0 && wager <= balance;  // Correct the condition if necessary
             case FOUR_ALIKE:
-                return wager > 0 && wager <= balance + 40; // Example condition
+                return wager > 0 && wager <= balance;  // Correct the condition if necessary
             default:
                 return false;
         }
@@ -95,35 +90,36 @@ public class GamesViewModel extends ViewModel {
             case TWO_ALIKE:
                 // Check for two alike
                 if (diceValues[0] == diceValues[1]) {
-                    return GameResult.WIN; // Example win condition
+                    return GameResult.WIN;
                 }
                 break;
             case THREE_ALIKE:
                 // Check for three alike
                 if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2]) {
-                    return GameResult.WIN; // Example win condition
+                    return GameResult.WIN;
                 }
                 break;
             case FOUR_ALIKE:
                 // Check for four alike
                 if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3]) {
-                    return GameResult.WIN; // Example win condition
+                    return GameResult.WIN;
                 }
                 break;
         }
-        return GameResult.LOSS; // Default to loss
+        return GameResult.LOSS;
     }
 
     public int[] diceValues() {
-        // Simulate rolling dice. This can be more sophisticated in a real game.
-        return new int[]{1, 2, 3, 4}; // Placeholder for actual dice values
+        int[] values = new int[numberOfDice];
+        for (int i = 0; i < numberOfDice; i++) {
+            dice[i].roll();
+            values[i] = dice[i].value();
+        }
+        return values;
     }
-
 
     @Override
-    protected void onCleared(){
+    protected void onCleared() {
         super.onCleared();
     }
-
-
 }
