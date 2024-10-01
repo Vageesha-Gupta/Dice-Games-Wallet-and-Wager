@@ -80,50 +80,55 @@ public class GamesViewModelWalletTest {
     @Test
     public void testCanPlaceWager() {
         m.setBalance(100);
-        assertThat(m.canPlaceWager(5, 2), is(true));
+        assertThat(m.isValidWager(), is(true));  // **Updated to just check the validity, adjust method if needed**
 
-        assertThat(m.canPlaceWager(3, 3), is(false));
-
-        assertThat(m.canPlaceWager(2, 4), is(true));
-
+        m.setWager(3);  // Set wager for next checks
+        assertThat(m.isValidWager(), is(false));  // Adjusted to ensure method checks correctly
     }
 
     @Test
     public void testPlayGameWin() {
         // Set the balance and mock die rolls for "3 alike" game
         m.setBalance(10);
+        m.setGameType(GameType.THREE_ALIKE);  // **Set the game type**
         when(walletDie.value()).thenReturn(3, 3, 3, 2);  // 3 alike
 
-        m.playGame(3, 3);  // Bet 3 coins on "3 alike"
+        m.setWager(3);  // **Set wager before playing**
+        GameResult result = m.play();  // **Call play() method instead of playGame()**
 
         // Balance should increase by 3 * 3 = 9 coins
-        assertThat(m.getWalletBalance(), is(19));
+        assertThat(m.getBalance(), is(19));  // **Using getter method**
+        assertThat(result, is(GameResult.WIN));  // **Check for win result**
     }
 
     @Test
     public void testPlayGameLose() {
         // Set the balance and mock die rolls for "3 alike" game
         m.setBalance(10);
+        m.setGameType(GameType.THREE_ALIKE);  // **Set the game type**
         when(walletDie.value()).thenReturn(2, 2, 3, 4);  // Not 3 alike
 
-        m.playGame(3, 3);  // Bet 3 coins on "3 alike"
+        m.setWager(3);  // **Set wager before playing**
+        GameResult result = m.play();  // **Call play() method instead of playGame()**
 
         // Balance should decrease by 3 * 3 = 9 coins
-        assertThat(m.getWalletBalance(), is(1));
+        assertThat(m.getBalance(), is(1));  // **Using getter method**
+        assertThat(result, is(GameResult.LOSS));  // **Check for loss result**
     }
 
     @Test
     public void canPlaceWagerReturnsTrueWhenWagerIsValid() {
         m.setBalance(10); // Set initial balance
-        int wager = 5;
-        assertThat(m.canPlaceWager(wager, 2), is(true)); // Betting on 2 alike game
+        m.setWager(5); // **Set wager before validation**
+        assertThat(m.isValidWager(), is(true)); // Adjusted to validate wager correctly
     }
 
     @Test
     public void canPlaceWagerReturnsFalseWhenWagerIsTooHigh() {
         m.setBalance(10); // Set initial balance
-        int wager = 5;
-        assertThat(m.canPlaceWager(wager, 3), is(false)); // Betting on 3 alike game
+        m.setWager(5); // **Set wager before validation**
+        m.setGameType(GameType.THREE_ALIKE); // **Set the game type**
+        assertThat(m.isValidWager(), is(false)); // Ensure method checks correctly
     }
 
     @Test
@@ -134,9 +139,11 @@ public class GamesViewModelWalletTest {
 
         when(m.diceValues()).thenReturn(diceRolls); // Assuming you have a method to get dice values
 
-        // Directly check the game logic without setGameType
-        boolean isWin = m.playGame(wager, 4); // Assuming playGame takes wager and type directly
-        assertThat(isWin, is(true)); // Assuming playGame returns a boolean indicating win/loss
+        m.setWager(wager); // **Set wager before playing**
+        m.setGameType(GameType.FOUR_ALIKE); // **Set the game type**
+        GameResult result = m.play(); // Call play method instead of playGame
+        assertThat(result, is(GameResult.WIN)); // Check for win result
+        assertThat(m.getBalance(), is(105)); // Verify balance after win
     }
 
     @Test
@@ -147,8 +154,11 @@ public class GamesViewModelWalletTest {
 
         when(m.diceValues()).thenReturn(diceRolls); // Assuming you have a method to get dice values
 
-        // Directly check the game logic without setGameType
-        boolean isWin = m.playGame(wager, 4); // Assuming playGame takes wager and type directly
-        assertThat(isWin, is(false)); // Assuming playGame returns a boolean indicating win/loss
+        m.setWager(wager); // **Set wager before playing**
+        m.setGameType(GameType.FOUR_ALIKE); // **Set the game type**
+        GameResult result = m.play(); // Call play method instead of playGame
+        assertThat(result, is(GameResult.LOSS)); // Check for loss result
+        assertThat(m.getBalance(), is(95)); // Verify balance after loss
     }
 }
+

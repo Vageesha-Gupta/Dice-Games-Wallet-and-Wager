@@ -17,6 +17,7 @@ public class GamesViewModel extends ViewModel {
     private GameType gameType;  // Type of the game being played
 
     Die die;
+    private Die walletDie;
 
     public GamesViewModel() {
         balance = 0;
@@ -65,17 +66,19 @@ public class GamesViewModel extends ViewModel {
     }
 
     public boolean isValidWager() {
+        if(wager==0)return false;
         switch (gameType) {
             case TWO_ALIKE:
-                return wager > 0 && wager <= balance;
+                return wager > 0 && 2*wager <= balance;
             case THREE_ALIKE:
-                return wager > 0 && wager <= balance;  // Correct the condition if necessary
+                return wager > 0 && 3*wager <= balance;  // Correct the condition if necessary
             case FOUR_ALIKE:
-                return wager > 0 && wager <= balance;  // Correct the condition if necessary
+                return wager > 0 && 4*wager <= balance;  // Correct the condition if necessary
             default:
                 return false;
         }
     }
+
 
     public GameResult play() {
         if (wager <= 0) {
@@ -86,28 +89,44 @@ public class GamesViewModel extends ViewModel {
         }
 
         int[] diceValues = diceValues();
+        GameResult result = GameResult.LOSS;  // Default to loss
+
         switch (gameType) {
             case TWO_ALIKE:
-                // Check for two alike
                 if (diceValues[0] == diceValues[1]) {
-                    return GameResult.WIN;
+                    result = GameResult.WIN;
+                    balance += wager * 2;
+                }
+                else{
+                    balance -= wager * 2;
                 }
                 break;
             case THREE_ALIKE:
-                // Check for three alike
                 if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2]) {
-                    return GameResult.WIN;
+                    result = GameResult.WIN;
+                    balance += wager * 3;
+                }
+                else{
+                    balance -= wager * 3;
                 }
                 break;
             case FOUR_ALIKE:
-                // Check for four alike
                 if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3]) {
-                    return GameResult.WIN;
+                    result = GameResult.WIN;
+                    balance += wager * 4;
+                }
+                else{
+                    balance -= wager * 4;
                 }
                 break;
         }
-        return GameResult.LOSS;
+
+        // Update balance based on result
+
+
+        return result;  // Return the result of the game
     }
+
 
     public int[] diceValues() {
         int[] values = new int[numberOfDice];

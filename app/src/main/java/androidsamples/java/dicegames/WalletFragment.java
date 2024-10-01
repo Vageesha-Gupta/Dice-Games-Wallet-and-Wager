@@ -42,6 +42,8 @@ public class WalletFragment extends Fragment {
 
         view.findViewById(R.id.btn_die).setOnClickListener(v -> {
             Log.d(TAG, "Rolled");
+            vm.rollWalletDie();  // Roll the die in the ViewModel
+            updateBalanceDisplay();  // Update balance after the die roll
         });
 
         view.findViewById(R.id.btn_games).setOnClickListener(v -> {
@@ -51,7 +53,7 @@ public class WalletFragment extends Fragment {
         });
     }
     private void updateBalanceDisplay() {
-        bal.setText(String.valueOf(vm.getWalletBalance()));  // Set the balance from ViewModel
+        bal.setText(String.valueOf(vm.getBalance()));  // Set the balance from ViewModel
     }
 
 }

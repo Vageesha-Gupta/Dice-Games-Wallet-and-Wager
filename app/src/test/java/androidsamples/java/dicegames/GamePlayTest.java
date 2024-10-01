@@ -13,7 +13,7 @@ public class GamePlayTest {
     public void wager20Balance20GameType2Invalid() {
         m.setWager(20);
         m.setBalance(20);
-        m.setGameType(GameType.TWO_ALIKE.ordinal());
+        m.setGameType(GameType.TWO_ALIKE);
         assertThat(m.isValidWager(), is(false));
     }
 
@@ -21,7 +21,7 @@ public class GamePlayTest {
     public void wager20Balance40GameType2Valid() {
         m.setWager(20);
         m.setBalance(40);
-        m.setGameType(GameType.TWO_ALIKE.ordinal());
+        m.setGameType(GameType.TWO_ALIKE);
         assertThat(m.isValidWager(), is(true));
     }
 
@@ -29,7 +29,7 @@ public class GamePlayTest {
     public void wager20Balance40GameType3Invalid() {
         m.setWager(20);
         m.setBalance(40);
-        m.setGameType(GameType.THREE_ALIKE.ordinal());
+        m.setGameType(GameType.THREE_ALIKE);
         assertThat(m.isValidWager(), is(false));
     }
 
@@ -37,7 +37,7 @@ public class GamePlayTest {
     public void wager20Balance60GameType3Valid() {
         m.setWager(20);
         m.setBalance(60);
-        m.setGameType(GameType.THREE_ALIKE.ordinal());
+        m.setGameType(GameType.THREE_ALIKE);
         assertThat(m.isValidWager(), is(true));
     }
 
@@ -45,7 +45,7 @@ public class GamePlayTest {
     public void wager20Balance60GameType4Invalid() {
         m.setWager(20);
         m.setBalance(60);
-        m.setGameType(GameType.FOUR_ALIKE.ordinal());
+        m.setGameType(GameType.FOUR_ALIKE);
         assertThat(m.isValidWager(), is(false));
     }
 
@@ -53,7 +53,7 @@ public class GamePlayTest {
     public void wager20Balance40GameType4Valid() {
         m.setWager(20);
         m.setBalance(80);
-        m.setGameType(GameType.FOUR_ALIKE.ordinal());
+        m.setGameType(GameType.FOUR_ALIKE);
         assertThat(m.isValidWager(), is(true));
     }
 
@@ -65,7 +65,7 @@ public class GamePlayTest {
 
     @Test
     public void callingPlayWithoutSettingWagerThrowsException() {
-        m.setGameType(GameType.TWO_ALIKE.ordinal());
+        m.setGameType(GameType.TWO_ALIKE);
         IllegalStateException thrown = assertThrows(IllegalStateException.class, m::play);
         assertThat(thrown.getMessage(), is("Wager not set, can't play!"));
     }
