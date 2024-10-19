@@ -36,7 +36,8 @@ public class WalletFragment extends Fragment {
         vm = new ViewModelProvider(requireActivity()).get(GamesViewModel.class);
         Log.d(TAG, "VM: " + vm);
 
-        bal = view.findViewById(R.id.txt_balance);
+//        bal = view.findViewById(R.id.txt_balance);
+        bal = view.findViewById(R.id.tvCoins);
 
         updateBalanceDisplay();
 
@@ -46,11 +47,13 @@ public class WalletFragment extends Fragment {
             updateBalanceDisplay();  // Update balance after the die roll
         });
 
-        view.findViewById(R.id.btn_games).setOnClickListener(v -> {
+        view.findViewById(R.id.btnToGames).setOnClickListener(v -> {
             Log.d(TAG, "Going to GamesFragment");
+            // Use Safe Args to navigate
             NavDirections action = WalletFragmentDirections.actionWalletFragmentToGamesFragment();
-            Navigation.findNavController(view).navigate(a);
+            Navigation.findNavController(view).navigate(action);
         });
+
     }
     private void updateBalanceDisplay() {
         bal.setText(String.valueOf(vm.getBalance()));  // Set the balance from ViewModel
