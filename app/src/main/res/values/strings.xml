@@ -8,4 +8,7 @@
     <string name="txt_balance">Balance</string>
     <string name="btn_die">Roll Die</string>
     <string name="btn_games">Games</string>
+    <string name="btn_games_text">TO GAMES</string>
+    <string name="txt_balance_text">Balance:</string>
 </resources>
+

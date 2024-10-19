@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="btn_games" type="id">TO GAMES</item>
-    <item name="txt_balance" type="id">Balance:</item>
+    <item name="btn_games" type="id"/>
+    <item name="txt_balance" type="id"/>
 </resources>
