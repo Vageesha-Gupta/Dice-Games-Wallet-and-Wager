@@ -48,7 +48,7 @@ public class WalletFragment extends Fragment {
 
         view.findViewById(R.id.btn_games).setOnClickListener(v -> {
             Log.d(TAG, "Going to GamesFragment");
-            NavDirections a = WalletFragmentDirections.actionWalletFragmentToGamesFragment();
+            NavDirections action = WalletFragmentDirections.actionWalletFragmentToGamesFragment();
             Navigation.findNavController(view).navigate(a);
         });
     }
