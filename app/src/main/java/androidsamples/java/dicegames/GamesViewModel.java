@@ -20,6 +20,7 @@ public class GamesViewModel extends AndroidViewModel {
 
     public MutableLiveData<Integer> balance = new MutableLiveData<>(0); // Initialize with 0
     private MutableLiveData<Integer> dieValue = new MutableLiveData<>(0); // Store die value here
+    private MutableLiveData<int[]> diceValuesLiveData;
     private SharedPreferences prefs;
     private Die[] dice; // Array to hold dice objects
     private int numberOfDice;
@@ -44,6 +45,7 @@ public class GamesViewModel extends AndroidViewModel {
         if (balance.getValue() == null) {
             balance.setValue(savedBalance);
         }
+        diceValuesLiveData = new MutableLiveData<>(new int[4]);
 
         die = new Die6();
         numberOfDice = 4;  // Initialize with 4 dice
@@ -191,6 +193,9 @@ public class GamesViewModel extends AndroidViewModel {
 
         Log.d("GamesViewModel", "Balance updated and saved: " + newBalance);
     }
+    public LiveData<int[]> getDiceValues() {
+        return diceValuesLiveData;
+    }
 
     public int[] diceValues() {
         int[] values = new int[numberOfDice];
@@ -198,6 +203,7 @@ public class GamesViewModel extends AndroidViewModel {
             dice[i].roll();
             values[i] = dice[i].value();
         }
+        diceValuesLiveData.setValue(values);
         return values;
     }
 

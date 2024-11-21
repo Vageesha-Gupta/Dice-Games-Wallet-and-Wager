@@ -72,29 +72,21 @@ public class GamesFragment extends Fragment {
             else gameType = GameType.FOUR_ALIKE;
             viewModel.setGameType(gameType);
         });
+        viewModel.getDiceValues().observe(getViewLifecycleOwner(), diceValues -> {
+            for (int i = 0; i < diceButtons.length; i++) {
+                diceButtons[i].setText(String.valueOf(diceValues[i])); // Update button text with dice value
+            }
+        });
 
         btnGo.setOnClickListener(v -> {
-            int selectedRadioButtonId = rgGameType.getCheckedRadioButtonId();
-
-            // If no radio button is selected, show a Toast and return
-            if (selectedRadioButtonId == -1) {
-                Toast.makeText(getContext(), "Please select a game type", Toast.LENGTH_SHORT).show();
-                return;  // Prevent further processing if no selection
-            }
-            String wagerText = etWager.getText().toString().trim();
-            if (!wagerText.isEmpty()) {
-                int wager = Integer.parseInt(wagerText);
-                viewModel.setWager(wager);
-                if (viewModel.isValidWager()) {
-                    GameResult result = viewModel.play();
-                    updateDiceUI();
-                    showResult(result);
-                    etWager.setText(""); // Clear wager after play
-                } else {
-                    Toast.makeText(getContext(), "Invalid wager", Toast.LENGTH_SHORT).show();
-                }
+            int wager = Integer.parseInt(etWager.getText().toString());
+            viewModel.setWager(wager);
+            if (viewModel.isValidWager()) {
+                GameResult result = viewModel.play();
+                updateDiceUI();
+                showResult(result);
             } else {
-                Toast.makeText(getContext(), "Please enter a wager", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Invalid wager", Toast.LENGTH_SHORT).show();
             }
         });
     }
