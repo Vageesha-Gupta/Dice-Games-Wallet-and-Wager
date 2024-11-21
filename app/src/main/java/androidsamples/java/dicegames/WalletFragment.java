@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -34,6 +35,7 @@ public class WalletFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         vm = new ViewModelProvider(requireActivity()).get(GamesViewModel.class);
+        Button dieButton = view.findViewById(R.id.btn_die);
         Log.d(TAG, "VM: " + vm);
         Integer initialBalance = vm.getBalance().getValue();
         Log.d(TAG, "Initial balance: " + vm.getBalance().getValue());
@@ -56,14 +58,20 @@ public class WalletFragment extends Fragment {
             }
             Log.d(TAG, "Balance updated to: " + balance);
         });
+        dieButton.setOnClickListener(v -> {
+            Log.d(TAG, "Rolled");
+            vm.rollWalletDie();
+            // Update the button text with the new die value
+            dieButton.setText(String.valueOf(vm.dieValue()));
+        });
 
 //        updateBalanceDisplay();
 
-        view.findViewById(R.id.btn_die).setOnClickListener(v -> {
-            Log.d(TAG, "Rolled");
-            vm.rollWalletDie();  // Roll the die in the ViewModel
-//            updateBalanceDisplay();  // Update balance after the die roll
-        });
+//        view.findViewById(R.id.btn_die).setOnClickListener(v -> {
+//            Log.d(TAG, "Rolled");
+//            vm.rollWalletDie();  // Roll the die in the ViewModel
+////            updateBalanceDisplay();  // Update balance after the die roll
+//        });
 
         view.findViewById(R.id.btnToGames).setOnClickListener(v -> {
             Log.d(TAG, "Going to GamesFragment");
