@@ -3,11 +3,37 @@ package androidsamples.java.dicegames;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.when;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class GamePlayTest {
-    private final GamesViewModel m = new GamesViewModel();
+    @Mock
+    private Application mockApplication;
+    @Mock
+    private SharedPreferences mockSharedPreferences;
+
+    @InjectMocks
+    // InjectMocks annotation will automatically inject the mocks into the GamesViewModel
+    private GamesViewModel m;
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        // Mock SharedPreferences correctly
+        when(mockApplication.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE))
+                .thenReturn(mockSharedPreferences);
+        // Mock SharedPreferences.getInt to return a value (e.g., 5)
+        when(mockSharedPreferences.getInt("balance", 0)).thenReturn(100);  // Assume default balance is 100
+        m = new GamesViewModel(mockApplication);
+    }
 
     @Test
     public void wager20Balance20GameType2Invalid() {

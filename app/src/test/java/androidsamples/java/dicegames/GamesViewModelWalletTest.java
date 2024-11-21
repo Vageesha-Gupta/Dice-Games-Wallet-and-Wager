@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -13,21 +15,43 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class GamesViewModelWalletTest {
     private static final int INCR_VALUE = 5;
     private static final int WIN_VALUE = 6;
 
+    @Mock
+    private Application mockApplication;  // Mocking the Application object
+    @Mock
+    private SharedPreferences mockSharedPreferences;
+
 
     @Spy
     private Die walletDie;
     @InjectMocks
-    private GamesViewModel m = new GamesViewModel();
+    private GamesViewModel m;
+
+
     private AutoCloseable closeable;
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        m = Mockito.spy(new GamesViewModel(mockApplication));
+        // Mock SharedPreferences if needed
+        when(mockApplication.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE))
+                .thenReturn(mockSharedPreferences);
+        // Mock SharedPreferences.getInt to return a value (e.g., 5)
+        when(mockSharedPreferences.getInt("balance", 0)).thenReturn(100);  // Assume default balance is 100
+    }
 
     @Before
     public void openMocks() {
+
         closeable = MockitoAnnotations.openMocks(this);
     }
 
@@ -38,7 +62,7 @@ public class GamesViewModelWalletTest {
 
     @Test
     public void rolling6IncrementsBalanceBy5() {
-        int oldBalance = m.balance;
+        int oldBalance = m.balance.getValue();
         when(walletDie.value()).thenReturn(WIN_VALUE);
 
         m.rollWalletDie();
@@ -47,7 +71,7 @@ public class GamesViewModelWalletTest {
 
     @Test
     public void rolling1DoesNotChangeBalance() {
-        int oldBalance = m.balance;
+        int oldBalance = m.balance.getValue();
         when(walletDie.value()).thenReturn(1);
 
         m.rollWalletDie();
@@ -57,7 +81,7 @@ public class GamesViewModelWalletTest {
     //more tests
     @Test
     public void rolling3DoesNotChangeBalance() {
-        int oldBalance = m.balance;
+        int oldBalance = m.balance.getValue();
         when(walletDie.value()).thenReturn(3);  // Non-winning number (3)
 
         m.rollWalletDie();
@@ -66,7 +90,7 @@ public class GamesViewModelWalletTest {
 
     @Test
     public void twoConsecutiveWinsIncrementBalanceBy10() {
-        int oldBalance = m.balance;
+        int oldBalance = m.balance.getValue();
         when(walletDie.value()).thenReturn(WIN_VALUE);  // Winning number (6)
 
         // Roll twice with a winning value
@@ -91,7 +115,8 @@ public class GamesViewModelWalletTest {
         // Set the balance and mock die rolls for "3 alike" game
         m.setBalance(10);
         m.setGameType(GameType.THREE_ALIKE);  // **Set the game type**
-        when(walletDie.value()).thenReturn(3, 3, 3, 2);  // 3 alike
+//        when(walletDie.value()).thenReturn(3, 3, 3, 2);  // 3 alike
+        Mockito.doReturn(new int[]{3, 3, 3, 2}).when(m).diceValues();
 
         m.setWager(3);  // **Set wager before playing**
         GameResult result = m.play();  // **Call play() method instead of playGame()**
@@ -109,7 +134,7 @@ public class GamesViewModelWalletTest {
         when(walletDie.value()).thenReturn(2, 2, 3, 4);  // Not 3 alike
 
         m.setWager(3);  // **Set wager before playing**
-        GameResult result = m.play();  // **Call play() method instead of playGame()**
+        GameResult result = m.play();
 
         // Balance should decrease by 3 * 3 = 9 coins
         assertThat(m.getBalance(), is(1));  // **Using getter method**
