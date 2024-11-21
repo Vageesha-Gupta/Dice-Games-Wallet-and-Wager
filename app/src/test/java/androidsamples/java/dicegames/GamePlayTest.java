@@ -27,12 +27,21 @@ public class GamePlayTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        // Mock SharedPreferences correctly
+
+        // Mock SharedPreferences behavior
+        when(mockSharedPreferences.getInt("balance", 0)).thenReturn(100);
         when(mockApplication.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE))
                 .thenReturn(mockSharedPreferences);
-        // Mock SharedPreferences.getInt to return a value (e.g., 5)
-        when(mockSharedPreferences.getInt("balance", 0)).thenReturn(100);  // Assume default balance is 100
+
+        // Manually create ViewModel with mocked application
         m = new GamesViewModel(mockApplication);
+//        MockitoAnnotations.initMocks(this);
+//        // Mock SharedPreferences correctly
+//        when(mockApplication.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE))
+//                .thenReturn(mockSharedPreferences);
+//        // Mock SharedPreferences.getInt to return a value (e.g., 5)
+//        when(mockSharedPreferences.getInt("balance", 0)).thenReturn(100);  // Assume default balance is 100
+//        m = new GamesViewModel(mockApplication);
     }
 
     @Test

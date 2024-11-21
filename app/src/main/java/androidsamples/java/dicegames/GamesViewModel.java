@@ -19,6 +19,7 @@ public class GamesViewModel extends AndroidViewModel {
     private static final int INCR_DOUBLE_SIXES_VALUE=10;
 
     public MutableLiveData<Integer> balance = new MutableLiveData<>(0); // Initialize with 0
+    private MutableLiveData<Integer> dieValue = new MutableLiveData<>(0); // Store die value here
     private SharedPreferences prefs;
     private Die[] dice; // Array to hold dice objects
     private int numberOfDice;
@@ -35,6 +36,10 @@ public class GamesViewModel extends AndroidViewModel {
         prefs = application.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE);
         int savedBalance = prefs.getInt("balance", 0);
         balance.setValue(savedBalance);
+        // Initialize die value from saved value or set a default
+        int savedDieValue = prefs.getInt("dieValue", 0);
+        dieValue.setValue(savedDieValue);
+
         //change
         if (balance.getValue() == null) {
             balance.setValue(savedBalance);
@@ -55,6 +60,9 @@ public class GamesViewModel extends AndroidViewModel {
     public int dieValue() {
         return die.value();
     }
+    public LiveData<Integer> getDieValue() {
+        return dieValue;
+    }
 
     public void rollWalletDie() {
 
@@ -62,6 +70,9 @@ public class GamesViewModel extends AndroidViewModel {
         int currentRoll = die.value();
         prevDieVal=currentDieVal;
         currentDieVal=currentRoll;
+        // Save the die value to LiveData
+        dieValue.setValue(currentDieVal);
+
         Log.d("GamesViewModel", "Die rolled: " + currentRoll);
         if (prevDieVal==WIN_VALUE && currentRoll == WIN_VALUE) {
             setBalance(INCR_DOUBLE_SIXES_VALUE);
@@ -69,6 +80,13 @@ public class GamesViewModel extends AndroidViewModel {
         else if(currentRoll == WIN_VALUE){
             setBalance(INCR_VALUE);
         }
+    }
+    // Save the die value to SharedPreferences when updated
+    private void saveDieValue(int value) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("dieValue", value);
+        editor.apply();
+        Log.d("GamesViewModel", "Saved die value: " + value);
     }
     public void setBalance(int increment) {
         int currentBalance = balance.getValue() != null ? balance.getValue() : 0;

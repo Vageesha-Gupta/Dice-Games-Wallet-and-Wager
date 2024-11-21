@@ -25,6 +25,7 @@ public class WalletFragment extends Fragment {
     private static final String TAG = "WalletFragment";
     private GamesViewModel vm;
     private TextView bal;
+    private Button dieButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,13 +36,10 @@ public class WalletFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         vm = new ViewModelProvider(requireActivity()).get(GamesViewModel.class);
-        Button dieButton = view.findViewById(R.id.btn_die);
+        dieButton = view.findViewById(R.id.btn_die);
         Log.d(TAG, "VM: " + vm);
         Integer initialBalance = vm.getBalance().getValue();
         Log.d(TAG, "Initial balance: " + vm.getBalance().getValue());
-
-//        bal = view.findViewById(R.id.txt_balance);
-
         bal = view.findViewById(R.id.tvCoinsValue);
         bal.setText(String.valueOf(initialBalance != null ? initialBalance : 0));
         Log.d(TAG, "TextView found: " + (bal != null));
@@ -58,11 +56,21 @@ public class WalletFragment extends Fragment {
             }
             Log.d(TAG, "Balance updated to: " + balance);
         });
+        // Observe the die value LiveData and update the die button text
+        vm.getDieValue().observe(getViewLifecycleOwner(), dieValue -> {
+            Log.d(TAG, "Die value observer triggered with: " + dieValue);
+            if (dieButton != null) {
+                dieButton.setText(String.valueOf(dieValue));
+                Log.d(TAG, "Die button updated to: " + dieValue);
+            } else {
+                Log.e(TAG, "Die button is null!");
+            }
+        });
         dieButton.setOnClickListener(v -> {
             Log.d(TAG, "Rolled");
             vm.rollWalletDie();
             // Update the button text with the new die value
-            dieButton.setText(String.valueOf(vm.dieValue()));
+            //dieButton.setText(String.valueOf(vm.dieValue()));
         });
 
 //        updateBalanceDisplay();

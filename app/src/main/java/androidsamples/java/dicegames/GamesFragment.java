@@ -74,6 +74,13 @@ public class GamesFragment extends Fragment {
         });
 
         btnGo.setOnClickListener(v -> {
+            int selectedRadioButtonId = rgGameType.getCheckedRadioButtonId();
+
+            // If no radio button is selected, show a Toast and return
+            if (selectedRadioButtonId == -1) {
+                Toast.makeText(getContext(), "Please select a game type", Toast.LENGTH_SHORT).show();
+                return;  // Prevent further processing if no selection
+            }
             String wagerText = etWager.getText().toString().trim();
             if (!wagerText.isEmpty()) {
                 int wager = Integer.parseInt(wagerText);
