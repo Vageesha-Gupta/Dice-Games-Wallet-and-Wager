@@ -72,6 +72,7 @@ public class GamesViewModel extends AndroidViewModel {
         currentDieVal=currentRoll;
         // Save the die value to LiveData
         dieValue.setValue(currentDieVal);
+        saveDieValue(currentDieVal);
 
         Log.d("GamesViewModel", "Die rolled: " + currentRoll);
         if (prevDieVal==WIN_VALUE && currentRoll == WIN_VALUE) {
