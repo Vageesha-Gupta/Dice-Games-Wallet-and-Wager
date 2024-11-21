@@ -10,5 +10,8 @@
     <string name="btn_games">Games</string>
     <string name="btn_games_text">TO GAMES</string>
     <string name="txt_balance_text">Balance:</string>
+    <string name="game_rules">Welcome to the dice game! Rules: \n1. Enter a wager.\n2. Choose a game type.\n3. Press GO to play!\n...</string>
+
+
 </resources>
 

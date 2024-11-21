@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".WalletFragment">
 
-    <!-- TextView for showing coins -->
-    <TextView
-        android:id="@+id/tvCoins"
+    <LinearLayout
+        android:id="@+id/linearLayoutCoins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Coins: 12"
-        android:textSize="24sp"
+        android:orientation="horizontal"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- TextView for showing "Coins:" label -->
+        <TextView
+            android:id="@+id/tvCoinsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:text="@string/coins"
+            android:textSize="24sp" /> <!-- Add some margin to separate from value -->
+
+        <!-- TextView for showing the coin value -->
+        <TextView
+            android:id="@+id/tvCoinsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/zero"
+            android:textSize="24sp" />
+    </LinearLayout>
 
     <!-- Button for dice roll -->
     <Button
@@ -28,7 +44,7 @@
         android:text="4"
         android:textColor="@android:color/white"
         android:textSize="48sp"
-        app:layout_constraintTop_toBottomOf="@+id/tvCoins"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutCoins"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

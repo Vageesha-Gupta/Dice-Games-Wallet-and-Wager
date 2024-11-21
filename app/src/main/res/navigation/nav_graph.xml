@@ -18,4 +18,17 @@
             android:id="@+id/action_walletFragment_to_gamesFragment"
             app:destination="@id/gamesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="androidsamples.java.dicegames.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+
+    <action
+        android:id="@+id/action_gamesFragment_to_infoFragment"
+        app:destination="@id/infoFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_gamesFragment"
+        app:destination="@id/gamesFragment" />
+
 </navigation>
