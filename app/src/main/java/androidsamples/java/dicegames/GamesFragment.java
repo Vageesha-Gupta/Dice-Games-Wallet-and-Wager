@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Arrays;
 
 public class GamesFragment extends Fragment {
     private GamesViewModel viewModel;
@@ -73,20 +76,34 @@ public class GamesFragment extends Fragment {
             viewModel.setGameType(gameType);
         });
         viewModel.getDiceValues().observe(getViewLifecycleOwner(), diceValues -> {
+            Log.d("GamesFragment", "Updating UI with dice values: " + Arrays.toString(diceValues));
             for (int i = 0; i < diceButtons.length; i++) {
                 diceButtons[i].setText(String.valueOf(diceValues[i])); // Update button text with dice value
             }
         });
 
+        // Setup game type radio buttons
+        rgGameType.setOnCheckedChangeListener((group, checkedId) -> {
+            GameType gameType;
+            if (checkedId == R.id.rbTwoAlike) gameType = GameType.TWO_ALIKE;
+            else if (checkedId == R.id.rbThreeAlike) gameType = GameType.THREE_ALIKE;
+            else gameType = GameType.FOUR_ALIKE;
+            viewModel.setGameType(gameType);
+        });
+
         btnGo.setOnClickListener(v -> {
-            int wager = Integer.parseInt(etWager.getText().toString());
-            viewModel.setWager(wager);
-            if (viewModel.isValidWager()) {
-                GameResult result = viewModel.play();
-                updateDiceUI();
-                showResult(result);
-            } else {
-                Toast.makeText(getContext(), "Invalid wager", Toast.LENGTH_SHORT).show();
+            try {
+                int wager = Integer.parseInt(etWager.getText().toString());
+                viewModel.setWager(wager);
+                if (viewModel.isValidWager()) {
+                    GameResult result = viewModel.play();
+                    //updateDiceUI();
+                    showResult(result);
+                } else {
+                    Toast.makeText(getContext(), "Invalid wager", Toast.LENGTH_SHORT).show();
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Please enter a valid wager", Toast.LENGTH_SHORT).show();
             }
         });
     }

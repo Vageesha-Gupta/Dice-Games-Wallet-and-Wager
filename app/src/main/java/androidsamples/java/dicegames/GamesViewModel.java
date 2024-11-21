@@ -10,6 +10,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Arrays;
+
 /**
  * A {@link ViewModel} shared between {@link androidx.fragment.app.Fragment}s.
  */
@@ -20,7 +22,7 @@ public class GamesViewModel extends AndroidViewModel {
 
     public MutableLiveData<Integer> balance = new MutableLiveData<>(0); // Initialize with 0
     private MutableLiveData<Integer> dieValue = new MutableLiveData<>(0); // Store die value here
-    private MutableLiveData<int[]> diceValuesLiveData;
+    private MutableLiveData<int[]> diceValuesLiveData= new MutableLiveData<>(new int[4]);
     private SharedPreferences prefs;
     private Die[] dice; // Array to hold dice objects
     private int numberOfDice;
@@ -35,8 +37,13 @@ public class GamesViewModel extends AndroidViewModel {
         //change
         super(application);
         prefs = application.getSharedPreferences("DiceGamePrefs", Context.MODE_PRIVATE);
+        if(balance==null){
+            System.out.println("IT'S A NULL VALUE ");
+        }
         int savedBalance = prefs.getInt("balance", 0);
         balance.setValue(savedBalance);
+
+
         // Initialize die value from saved value or set a default
         int savedDieValue = prefs.getInt("dieValue", 0);
         dieValue.setValue(savedDieValue);
@@ -45,7 +52,7 @@ public class GamesViewModel extends AndroidViewModel {
         if (balance.getValue() == null) {
             balance.setValue(savedBalance);
         }
-        diceValuesLiveData = new MutableLiveData<>(new int[4]);
+//        diceValuesLiveData = new MutableLiveData<>(new int[4]);
 
         die = new Die6();
         numberOfDice = 4;  // Initialize with 4 dice
@@ -53,6 +60,7 @@ public class GamesViewModel extends AndroidViewModel {
         for (int i = 0; i < numberOfDice; i++) {
             dice[i] = new Die6();  // Assuming Die6 class represents a 6-sided die
         }
+//        diceValuesLiveData.setValue(new int[numberOfDice]);
     }
 
     public LiveData<Integer> getBalance() {
@@ -65,6 +73,7 @@ public class GamesViewModel extends AndroidViewModel {
     public LiveData<Integer> getDieValue() {
         return dieValue;
     }
+
 
     public void rollWalletDie() {
 
@@ -142,32 +151,17 @@ public class GamesViewModel extends AndroidViewModel {
         if (gameType == null) {
             throw new IllegalStateException("Game Type not set, can't play!");
         }
+        Log.d("GamesViewModel", "Starting game...");
+        Log.d("GamesViewModel", "Previous Balance: " + (balance.getValue() != null ? balance.getValue() : 0));
+        Log.d("GamesViewModel", "Game Type: " + gameType);
+        Log.d("GamesViewModel", "Wager: " + wager);
 
         int[] diceValues = diceValues();
+        diceValuesLiveData.setValue(diceValues);
         GameResult result = GameResult.LOSS;  // Default to loss
+        Log.d("GamesViewModel", "Dice Values: " + Arrays.toString(diceValues));
 
         switch (gameType) {
-            case TWO_ALIKE:
-                if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] || diceValues[0] == diceValues[1] && diceValues[1] == diceValues[3] || diceValues[0] == diceValues[3] && diceValues[3] == diceValues[2] || diceValues[3] == diceValues[1] && diceValues[1] == diceValues[2]) {
-                    updateBalance(-2);
-                }
-                else if (diceValues[0] == diceValues[1] || diceValues[0] == diceValues[2] || diceValues[0] == diceValues[3] ||
-                        diceValues[1] == diceValues[2] || diceValues[1] == diceValues[3] ||
-                        diceValues[2] == diceValues[3]) {
-                    result = GameResult.WIN;
-                    updateBalance(2);
-                } else {
-                    updateBalance(-2);
-                }
-                break;
-            case THREE_ALIKE:
-                if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] || diceValues[0] == diceValues[1] && diceValues[1] == diceValues[3] || diceValues[0] == diceValues[3] && diceValues[3] == diceValues[2] || diceValues[3] == diceValues[1] && diceValues[1] == diceValues[2]) {
-                    result = GameResult.WIN;
-                    updateBalance(3);
-                } else {
-                    updateBalance(-3);
-                }
-                break;
             case FOUR_ALIKE:
                 if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] && diceValues[2] == diceValues[3]) {
                     result = GameResult.WIN;
@@ -176,7 +170,30 @@ public class GamesViewModel extends AndroidViewModel {
                     updateBalance(-4);
                 }
                 break;
+
+            case THREE_ALIKE:
+                if (diceValues[0] == diceValues[1] && diceValues[1] == diceValues[2] || diceValues[0] == diceValues[1] && diceValues[1] == diceValues[3] || diceValues[0] == diceValues[3] && diceValues[3] == diceValues[2] || diceValues[3] == diceValues[1] && diceValues[1] == diceValues[2]) {
+                    result = GameResult.WIN;
+                    updateBalance(3);
+                } else {
+                    updateBalance(-3);
+                }
+                break;
+
+            case TWO_ALIKE:
+                if (diceValues[0] == diceValues[1] || diceValues[0] == diceValues[2] || diceValues[0] == diceValues[3] ||
+                        diceValues[1] == diceValues[2] || diceValues[1] == diceValues[3] ||
+                        diceValues[2] == diceValues[3]) {
+                    result = GameResult.WIN;
+                    updateBalance(2);
+                } else {
+                    updateBalance(-2);
+                }
+                break;
+
+
         }
+        Log.d("GamesViewModel", "New Balance: " + (balance.getValue() != null ? balance.getValue() : 0));
 
         return result;  // Return the result of the game
     }
@@ -206,6 +223,8 @@ public class GamesViewModel extends AndroidViewModel {
         diceValuesLiveData.setValue(values);
         return values;
     }
+
+
 
     @Override
     protected void onCleared() {
