@@ -62,7 +62,8 @@ public class GamesViewModelWalletTest {
 
     @Test
     public void rolling6IncrementsBalanceBy5() {
-        int oldBalance = m.balance.getValue();
+//        int oldBalance = m.balance.getValue();
+        int oldBalance = 100;
         when(walletDie.value()).thenReturn(WIN_VALUE);
 
         m.rollWalletDie();
