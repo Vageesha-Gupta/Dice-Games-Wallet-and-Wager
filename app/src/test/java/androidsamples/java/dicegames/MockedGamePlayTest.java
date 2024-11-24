@@ -157,4 +157,81 @@ public void setUp() {
         assertThat(result, is(GameResult.WIN));  // Check if the result is WIN
         assertThat(m2.getBalance().getValue(), is(115));  // Check if the balance is updated after winning
     }
+    @Test
+    public void testPlayGameWin() {
+        // Set the balance and mock die rolls for "3 alike" game
+        m2.setBalance(10);
+        m2.setGameType(GameType.THREE_ALIKE);  // **Set the game type**
+//        when(walletDie.value()).thenReturn(3, 3, 3, 2);  // 3 alike
+//        Mockito.doReturn(new int[]{3, 3, 3, 2}).when(m1.diceValues());
+        when(m2.diceValues()).thenReturn(new int[]{3, 3, 3, 2});
+
+        m2.setWager(3);  // **Set wager before playing**
+        GameResult result = m2.play();  // **Call play() method instead of playGame()**
+
+        // Balance should increase by 3 * 3 = 9 coins
+        assertThat(m2.getBalance().getValue(), is(19));  // **Using getter method**
+        assertThat(result, is(GameResult.WIN));  // **Check for win result**
+    }
+
+    @Test
+    public void testPlayGameLose() {
+        // Set the balance and mock die rolls for "3 alike" game
+        m2.setBalance(10);
+        m2.setGameType(GameType.THREE_ALIKE);  // **Set the game type**
+        when(walletDie.value()).thenReturn(2, 2, 3, 4);  // Not 3 alike
+
+        m2.setWager(3);  // **Set wager before playing**
+        GameResult result = m2.play();
+
+        // Balance should decrease by 3 * 3 = 9 coins
+        assertThat(m2.getBalance().getValue(), is(1));  // **Using getter method**
+        assertThat(result, is(GameResult.LOSS));  // **Check for loss result**
+    }
+
+    @Test
+    public void canPlaceWagerReturnsTrueWhenWagerIsValid() {
+        m2.setBalance(10); // Set initial balance
+        m2.setWager(5); // **Set wager before validation**
+        m2.setGameType(GameType.TWO_ALIKE);
+        assertThat(m2.isValidWager(), is(true)); // Adjusted to validate wager correctly
+    }
+
+    @Test
+    public void canPlaceWagerReturnsFalseWhenWagerIsTooHigh() {
+        m2.setBalance(10); // Set initial balance
+        m2.setWager(5); // **Set wager before validation**
+        m2.setGameType(GameType.THREE_ALIKE); // **Set the game type**
+        assertThat(m2.isValidWager(), is(false)); // Ensure method checks correctly
+    }
+
+    @Test
+    public void playGameWinsWhenDiceAreFourAlike() {
+        m2.setBalance(100); // Initial balance
+        int wager = 5; // Set wager
+        int[] diceRolls = {1, 1, 1, 1}; // Mocking dice values
+
+        when(m2.diceValues()).thenReturn(diceRolls); // Assuming you have a method to get dice values
+
+        m2.setWager(wager); // **Set wager before playing**
+        m2.setGameType(GameType.FOUR_ALIKE); // **Set the game type**
+        GameResult result = m2.play(); // Call play method instead of playGame
+        assertThat(result, is(GameResult.WIN)); // Check for win result
+        assertThat(m2.getBalance().getValue(), is(120)); // Verify balance after win
+    }
+
+    @Test
+    public void playGameLosesWhenDiceAreNotFourAlike() {
+        m2.setBalance(100); // Initial balance
+        int wager = 5; // Set wager
+        int[] diceRolls = {2, 1, 1, 1}; // Mocking dice values
+
+        when(m2.diceValues()).thenReturn(diceRolls); // Assuming you have a method to get dice values
+
+        m2.setWager(wager); // **Set wager before playing**
+        m2.setGameType(GameType.FOUR_ALIKE); // **Set the game type**
+        GameResult result = m2.play(); // Call play method instead of playGame
+        assertThat(result, is(GameResult.LOSS)); // Check for loss result
+        assertThat(m2.getBalance().getValue(), is(80)); // Verify balance after loss
+    }
 }
