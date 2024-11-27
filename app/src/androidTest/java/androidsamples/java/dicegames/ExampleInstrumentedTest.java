@@ -126,7 +126,7 @@ public class ExampleInstrumentedTest {
 //        // Verify balance updated
 //        onView(withId(R.id.tvCoins)).check(matches(not(withText("100")))); // Initial balance is mocked
 //    }
-//}
+}
 
 //package androidsamples.java.dicegames;
 //
