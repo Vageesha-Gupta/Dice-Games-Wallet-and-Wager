@@ -22,7 +22,7 @@ public class GamesViewModel extends AndroidViewModel {
 
     public MutableLiveData<Integer> balance = new MutableLiveData<>(0); // Initialize with 0
     private MutableLiveData<Integer> dieValue = new MutableLiveData<>(0); // Store die value here
-    private MutableLiveData<int[]> diceValuesLiveData= new MutableLiveData<>(new int[4]);
+    public MutableLiveData<int[]> diceValuesLiveData= new MutableLiveData<>(new int[4]);
     private SharedPreferences prefs;
     private Die[] dice; // Array to hold dice objects
     private int numberOfDice;

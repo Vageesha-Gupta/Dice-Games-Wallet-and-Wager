@@ -3,6 +3,7 @@ package androidsamples.java.dicegames;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
@@ -11,10 +12,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.TextView;
@@ -42,9 +45,12 @@ public class ExampleInstrumentedTest {
     private SharedPreferences mockSharedPrefs;
     @Mock
     private SharedPreferences.Editor mockEditor;
+    private GamesViewModel gamesViewModel;
 
     @Before
     public void setUp() {
+        Application application = (Application) ApplicationProvider.getApplicationContext();
+        gamesViewModel = new GamesViewModel(application);
         MockitoAnnotations.initMocks(this);
 
         // Setup mock SharedPreferences
@@ -106,6 +112,141 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.dice3)).check(matches(isDisplayed()));
         onView(withId(R.id.dice4)).check(matches(isDisplayed()));
     }
+//    @Test
+//    public void testBalanceUpdateForTwoAlikeWin() {
+//        // Navigate to the games screen
+//        onView(withId(R.id.btnToGames)).perform(click());
+//
+//        // Set the initial balance and wager
+//        int initialBalance = 100;
+//        int wager = 10;
+//
+//        // Update ViewModel properties via UI interactions
+//        onView(withId(R.id.etWager)).perform(replaceText(String.valueOf(wager)), closeSoftKeyboard());
+//        gamesViewModel.setBalance(initialBalance); // Directly setting balance for test setup
+//        onView(withId(R.id.rbTwoAlike)).perform(click());
+//
+//        // Mock dice roll result for a "Two Alike" win
+//        gamesViewModel.diceValuesLiveData.setValue(new int[]{1, 1, 2, 3}); // First two dice are alike
+//
+//        // Simulate game play through UI
+//        onView(withId(R.id.btnGo)).perform(click());
+//
+//        // Expected balance after a win
+//        int expectedBalance = initialBalance + (2 * wager);
+//
+//        // Verify the game result
+////        onView(withId(R.id.textViewGameResult)).check(matches(withText("WIN")));
+//
+//        // Verify the updated balance
+//        onView(withId(R.id.tvCoinsValue)).check(matches(withText(String.valueOf(expectedBalance))));
+//    }
+//@Test
+//public void testBalanceUpdateForLoss() {
+//    // Set initial conditions
+//    int initialBalance = 100;
+//    int wager = 10;
+//
+//    gamesViewModel.setBalance(initialBalance);
+//    gamesViewModel.setWager(wager);
+//    gamesViewModel.setGameType(GameType.TWO_ALIKE);
+//
+//    // Navigate to the games screen
+//    onView(withId(R.id.btnToGames)).perform(click());
+//    onView(withId(R.id.rbTwoAlike)).perform(click());
+//
+//    // Simulate dice roll result for a loss (no two alike)
+//    gamesViewModel.diceValuesLiveData.setValue(new int[]{1, 2, 3, 4}); // No two alike
+//
+//    // Simulate game play
+//    onView(withId(R.id.btnGo)).perform(click());
+//
+//    // Calculate expected balance
+//    int expectedBalance = initialBalance - wager;
+//
+//    // Assert result and balance
+////    onView(withId(R.id.textViewGameResult)).check(matches(withText("LOSS")));
+//    onView(withId(R.id.tvCoinsValue)).check(matches(withText(String.valueOf(expectedBalance))));
+//}
+//    @Test
+//    public void testBalanceUpdateForThreeAlikeWin() {
+//        // Set initial conditions
+//        int initialBalance = 100;
+//        int wager = 10;
+//
+//        gamesViewModel.setBalance(initialBalance);
+//        gamesViewModel.setWager(wager);
+//        gamesViewModel.setGameType(GameType.THREE_ALIKE);
+//
+//        // Navigate to the games screen
+//        onView(withId(R.id.btnToGames)).perform(click());
+//        onView(withId(R.id.rbThreeAlike)).perform(click());
+//
+//        // Simulate dice roll result for a "Three Alike" win
+//        gamesViewModel.diceValuesLiveData.setValue(new int[]{3, 3, 3, 2}); // First three dice are alike
+//
+//        // Simulate game play
+//        onView(withId(R.id.btnGo)).perform(click());
+//
+//        // Calculate expected balance
+//        int expectedBalance = initialBalance + (3 * wager);
+//
+//        // Assert result and balance
+////        onView(withId(R.id.textViewGameResult)).check(matches(withText("WIN")));
+//        onView(withId(R.id.tvCoinsValue)).check(matches(withText(String.valueOf(expectedBalance))));
+//    }
+//
+
+
+
+
+
+//    @Test
+//    public void testFullGamePlayFlow() {
+//        Context context = ApplicationProvider.getApplicationContext();
+//        GamesViewModel gvm = new GamesViewModel(application);
+//
+//        // Navigate to Games
+//        onView(withId(R.id.btnToGames)).perform(click());
+//
+//        // Set a valid wager
+//        onView(withId(R.id.etWager)).perform(typeText("10"), closeSoftKeyboard());
+//
+//        // Select game type
+//        onView(withId(R.id.rbTwoAlike)).perform(click());
+//
+//        // Start the game
+//        onView(withId(R.id.btnGo)).perform(click());
+//
+//        // Assert game result visibility
+//        onView(withId(R.id.tvResult)).check(matches(isDisplayed()));
+//
+//        // Set initial balance
+//        gvm.setBalance(100);
+//        // Mock dice roll result to force a "Two Alike" outcome
+//        int initialBalance = gvm.getBalance().getValue();
+//        int wager = 10;
+//
+//        // Simulate the game
+//        gvm.setGameType(GameType.TWO_ALIKE);
+//        gvm.setWager(wager);
+//        boolean result;
+//        if(gvm.play()==GameResult.WIN){
+//            result=true;
+//        }
+//        else{
+//            result=false;
+//        }
+//        int actualBalance = gvm.getBalance().getValue();
+//
+//
+//        // Assert the balance based on the result
+//        int expectedBalance =  result ? initialBalance + (2 * wager) : initialBalance - (2 * wager);
+//
+//
+//        assertEquals(expectedBalance, actualBalance);
+//    }
+
 
     @Test
     public void testInfoButtonNavigation() {
