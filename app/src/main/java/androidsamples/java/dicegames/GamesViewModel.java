@@ -24,7 +24,7 @@ public class GamesViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> dieValue = new MutableLiveData<>(0); // Store die value here
     public MutableLiveData<int[]> diceValuesLiveData= new MutableLiveData<>(new int[4]);
     private SharedPreferences prefs;
-    private Die[] dice; // Array to hold dice objects
+    public Die[] dice; // Array to hold dice objects
     private int numberOfDice;
     private int wager;  // Wager for the game
     private GameType gameType;// Type of the game being played

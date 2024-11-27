@@ -159,6 +159,8 @@ public class GamesFragment extends Fragment {
         for (int i = 0; i < diceButtons.length; i++) {
             diceButtons[i].setText(String.valueOf(diceValues[i]));
         }
+
+
     }
 
     private void showResult(GameResult result) {
