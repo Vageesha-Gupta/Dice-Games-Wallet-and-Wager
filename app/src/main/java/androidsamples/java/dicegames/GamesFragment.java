@@ -1,5 +1,7 @@
 package androidsamples.java.dicegames;
 
+import static android.app.BroadcastOptions.fromBundle;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,7 +38,11 @@ public class GamesFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(GamesViewModel.class);
 
+//
+
+        int balance = GamesFragmentArgs.fromBundle(getArguments()).getBal();
         tvCoins = view.findViewById(R.id.tvCoins);
+
         rgGameType = view.findViewById(R.id.rgGameType);
         etWager = view.findViewById(R.id.etWager);
         btnGo = view.findViewById(R.id.btnGo);
@@ -48,11 +54,49 @@ public class GamesFragment extends Fragment {
                 view.findViewById(R.id.dice3),
                 view.findViewById(R.id.dice4)
         };
+        viewModel.getBalance().observe(getViewLifecycleOwner(), currentBalance -> {
+            tvCoins.setText("Coins: " + currentBalance); // Update the balance text in the UI
+        });
+        viewModel.getDiceValues().observe(getViewLifecycleOwner(), diceValues -> {
+            Log.d("GamesFragment", "Updating dice buttons: " + Arrays.toString(diceValues));
+            for (int i = 0; i < diceButtons.length; i++) {
+                diceButtons[i].setText(String.valueOf(diceValues[i]));
+            }
+        });
 
-        setupUI();
+//        setupUI(balance);
+//        setupInfoButton();
+        setupGameTypeRadioButtons();
+        setupGoButton();
         setupInfoButton();
 
         return view;
+    }
+    private void setupGameTypeRadioButtons() {
+        rgGameType.setOnCheckedChangeListener((group, checkedId) -> {
+            GameType gameType;
+            if (checkedId == R.id.rbTwoAlike) gameType = GameType.TWO_ALIKE;
+            else if (checkedId == R.id.rbThreeAlike) gameType = GameType.THREE_ALIKE;
+            else gameType = GameType.FOUR_ALIKE;
+            viewModel.setGameType(gameType);
+        });
+    }
+
+    private void setupGoButton() {
+        btnGo.setOnClickListener(v -> {
+            try {
+                int wager = Integer.parseInt(etWager.getText().toString());
+                viewModel.setWager(wager);
+                if (viewModel.isValidWager()) {
+                    GameResult result = viewModel.play();  // Play the game
+                    showResult(result); // Show the result (win/loss)
+                } else {
+                    Toast.makeText(getContext(), "Invalid wager", Toast.LENGTH_SHORT).show();
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Please enter a valid wager", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupInfoButton() {
@@ -63,10 +107,12 @@ public class GamesFragment extends Fragment {
         });
     }
 
-    private void setupUI() {
-        viewModel.getBalance().observe(getViewLifecycleOwner(), balance -> {
-            tvCoins.setText("Coins: " + balance);
-        });
+    private void setupUI(int balance) {
+//        viewModel.setBalance(balance);
+        tvCoins.setText("Coins: " + balance);
+//        viewModel.getBalance().observe(getViewLifecycleOwner(), balance -> {
+//            tvCoins.setText("Coins: " + balance);
+//        });
 
         rgGameType.setOnCheckedChangeListener((group, checkedId) -> {
             GameType gameType;

@@ -110,6 +110,8 @@ public class GamesViewModel extends AndroidViewModel {
         editor.apply();
 
         Log.d("GamesViewModel", "Balance updated: " + newBalance);
+        Log.d("GamesViewModel", "Saved balance verification: " +
+                prefs.getInt("balance", 0));
     }
 
     public void setWager(int wager) {
@@ -220,6 +222,7 @@ public class GamesViewModel extends AndroidViewModel {
             dice[i].roll();
             values[i] = dice[i].value();
         }
+
         diceValuesLiveData.setValue(values);
         return values;
     }

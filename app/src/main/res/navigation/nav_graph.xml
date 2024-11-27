@@ -8,7 +8,14 @@
         android:id="@+id/gamesFragment"
         android:name="androidsamples.java.dicegames.GamesFragment"
         android:label="fragment_games"
-        tools:layout="@layout/fragment_games" />
+        tools:layout="@layout/fragment_games">
+        <argument
+            android:name="bal"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_walletFragment_to_gamesFragment"
+            app:destination="@id/gamesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/walletFragment"
         android:name="androidsamples.java.dicegames.WalletFragment"

@@ -88,7 +88,8 @@ public class WalletFragment extends Fragment {
         view.findViewById(R.id.btnToGames).setOnClickListener(v -> {
             Log.d(TAG, "Going to GamesFragment");
             // Use Safe Args to navigate
-            NavDirections action = WalletFragmentDirections.actionWalletFragmentToGamesFragment();
+            int bal=vm.getBalance().getValue();
+            NavDirections action = WalletFragmentDirections.actionWalletFragmentToGamesFragment(bal);
             Navigation.findNavController(view).navigate(action);
         });
 
