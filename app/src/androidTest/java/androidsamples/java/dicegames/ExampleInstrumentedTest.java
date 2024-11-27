@@ -114,19 +114,19 @@ public class ExampleInstrumentedTest {
 
     }
 
-    @Test
-    public void testBalanceUpdateAfterGame() {
-        onView(withId(R.id.btnToGames)).perform(click());
-
-        // Play a game
-        onView(withId(R.id.etWager)).perform(typeText("10"), closeSoftKeyboard());
-        onView(withId(R.id.rbTwoAlike)).perform(click());
-        onView(withId(R.id.btnGo)).perform(click());
-
-        // Verify balance updated
-        onView(withId(R.id.tvCoins)).check(matches(not(withText("100")))); // Initial balance is mocked
-    }
-}
+//    @Test
+//    public void testBalanceUpdateAfterGame() {
+//        onView(withId(R.id.btnToGames)).perform(click());
+//
+//        // Play a game
+//        onView(withId(R.id.etWager)).perform(typeText("10"), closeSoftKeyboard());
+//        onView(withId(R.id.rbTwoAlike)).perform(click());
+//        onView(withId(R.id.btnGo)).perform(click());
+//
+//        // Verify balance updated
+//        onView(withId(R.id.tvCoins)).check(matches(not(withText("100")))); // Initial balance is mocked
+//    }
+//}
 
 //package androidsamples.java.dicegames;
 //

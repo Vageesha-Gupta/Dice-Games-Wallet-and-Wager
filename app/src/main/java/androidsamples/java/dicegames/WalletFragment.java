@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A {@link Fragment} that implements the Wallet screen.
@@ -69,6 +70,9 @@ public class WalletFragment extends Fragment {
         dieButton.setOnClickListener(v -> {
             Log.d(TAG, "Rolled");
             vm.rollWalletDie();
+            if(vm.dieValue()==6){
+                Toast.makeText(getContext(), "You won!", Toast.LENGTH_SHORT).show();
+            }
             // Update the button text with the new die value
             //dieButton.setText(String.valueOf(vm.dieValue()));
         });
