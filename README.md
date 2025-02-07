@@ -23,13 +23,3 @@ The app’s key functionalities are as follows:
    - Losing a round results in a decrease in the balance by the amount of the wager.
    
    Players can continue to play and increase their balance or try to recover from losses.
-
-
-**Extent of Pair Programming Used**: **5/5** 
-
-
-## Difficulty Rating
-
-**Assignment Difficulty**: **7/10** 
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/h3RlyAsJ)
